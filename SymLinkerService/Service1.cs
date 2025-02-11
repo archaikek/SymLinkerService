@@ -24,5 +24,13 @@ namespace SymLinkerService
 		protected override void OnStop()
 		{
 		}
+
+		public void RunAsConsole(string[] args)
+		{
+			OnStart(args);
+			Console.WriteLine("Press Enter to exit...");
+			Console.ReadLine();
+			OnStop();
+		}
 	}
 }
