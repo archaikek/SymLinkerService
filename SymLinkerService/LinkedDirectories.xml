@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Directories>
+	<Directory source="C:\Users\Archaic\Documents\Klepanie\.NET\SymLinkerService\SymLinkerService\TestLocations\source" target="C:\Users\Archaic\Documents\Klepanie\.NET\SymLinkerService\SymLinkerService\TestLocations\target">
+		<Ignore name="Microsoft"></Ignore>
+	</Directory>
+</Directories>
