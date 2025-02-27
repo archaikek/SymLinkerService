@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace SymLinkerService
 {
 	internal static class LinkedDirectoriesHelper
 	{
-		public static readonly string configPath = Directory.GetCurrentDirectory() + "../../../LinkedDirectories.xml";
+		public static readonly string configPath = ConfigurationManager.AppSettings["ConfigLocation"];
 		public static List<LinkedDirectoryInfo> GetLinkedDirectories()
 		{
 			List<LinkedDirectoryInfo> results = new List<LinkedDirectoryInfo>();
@@ -43,7 +44,7 @@ namespace SymLinkerService
 						}
 						else
 						{
-							newdir.ignores.Add(nameAttr.Value);
+							newdir.ignores.Add($"{newdir.source}\\{nameAttr.Value}");
 						}
 					}
 
