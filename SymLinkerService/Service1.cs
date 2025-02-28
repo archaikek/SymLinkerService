@@ -27,11 +27,15 @@ namespace SymLinkerService
 		{
 			Console.WriteLine("Starting...");
 
-			int interval = Int32.Parse(ConfigurationManager.AppSettings["Interval"]);
-
+			int interval = 1800; // 30 minute timer by default
+			try
+			{
+				interval = Int32.Parse(args[0]);
+			}
+			catch { }
 			Console.WriteLine("Started!");
 
-			var timer = new System.Timers.Timer(TimeSpan.FromMinutes(interval).TotalMilliseconds);
+			var timer = new System.Timers.Timer(TimeSpan.FromSeconds(interval).TotalMilliseconds);
 			timer.AutoReset = true;
 			timer.Elapsed += UpdateJunctions;
 			timer.Start();
@@ -55,13 +59,21 @@ namespace SymLinkerService
 		private void UpdateJunctions(object sender, ElapsedEventArgs e)
 		{
 			Console.WriteLine("Tick!");
-			var dirs = LinkedDirectoriesHelper.GetLinkedDirectories();
+			List<LinkedDirectoriesHelper.LinkedDirectoryInfo> dirs;
+			try
+			{
+				dirs = LinkedDirectoriesHelper.GetLinkedDirectories();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("Failed to read the config file (most likely the XML structure is incorrect.");
+				return;
+			}
 			foreach (var dir in dirs)
 			{
 				var srcDirs = Directory.GetDirectories(dir.source).Where(d => !dir.ignores.Contains(d));
 				foreach (var srcDir in srcDirs)
 				{
-					Console.WriteLine($"Processing: {srcDir}");
 					var name = Path.GetFileName(srcDir);
 					try
 					{
@@ -70,7 +82,7 @@ namespace SymLinkerService
 					}
 					catch (Exception ex)
 					{
-						Console.WriteLine($"Exception at {srcDir}. Details:\n{ex}");
+						Console.WriteLine($"Exception at {srcDir}. Details:\n{ex}\n\n");
 					}
 				}
 			}
